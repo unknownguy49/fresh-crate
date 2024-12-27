@@ -9,5 +9,3 @@ instance/
 .DS_Store
 .env
 *.sqlite3
-
-.vercel
