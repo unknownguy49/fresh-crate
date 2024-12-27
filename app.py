@@ -27,6 +27,7 @@ class Order(db.Model):
     cart_details = db.Column(JSON, nullable=False)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
+    # Relationship to the Delivery table
     delivery = db.relationship('Delivery', backref=db.backref('orders', lazy=True))
 
 # Initialize the database
@@ -48,6 +49,7 @@ def setup():
         Product(name="Cauliflower", price=22.0),
         Product(name="Spinach", price=12.0),
         Product(name="Broccoli", price=40.0),
+        Product(name="Mushrooms", price=50.0),
         Product(name="Capsicum", price=35.0),
         Product(name="Green Chilies", price=15.0),
         Product(name="Peas", price=28.0),
@@ -59,15 +61,10 @@ def setup():
         Product(name="Pumpkin", price=25.0),
         Product(name="Bottle Gourd", price=15.0),
         Product(name="Bitter Gourd", price=30.0)
-
     ]
-
-    meals = [
-        Product(name="mealbox1", price=100.0),
-        Product(name="mealbox2", price=100.0)
-    ]
-    db.session.add_all(products + meals)
+    db.session.add_all(products)
     db.session.commit()
+
 
 # Routes
 @app.route('/')
@@ -78,6 +75,7 @@ def signin():
 def register():
     return render_template('register.html')
 
+
 @app.route('/home')
 def home():
     return render_template('home.html')
@@ -87,28 +85,16 @@ def index():
     products = Product.query.all()
     return render_template('index.html', products=products)
 
-@app.route('/meals')
-def meals():
-    meals = Product.query.all()
-    return render_template('meals.html', products=meals)
-
 @app.route('/add_to_cart/<int:product_id>')
 def add_to_cart(product_id):
     product = Product.query.get(product_id)
     if 'cart' not in session:
         session['cart'] = []
-
     cart = session['cart']
-    for item in cart:
-        if item['id'] == product.id:
-            item['quantity'] += 1
-            break
-    else:
-        cart.append({'id': product.id, 'name': product.name, 'price': product.price, 'quantity': 1})
-
+    cart.append({'id': product.id, 'name': product.name, 'price': product.price})
     session['cart'] = cart
     flash(f"{product.name} added to cart!", "success")
-    return redirect(url_for('index'))
+    return redirect(url_for('cart'))
 
 @app.route('/cart')
 def cart():
@@ -121,27 +107,6 @@ def remove_from_cart(product_id):
     flash("Item removed from cart!", "success")
     return redirect(url_for('cart'))
 
-@app.route('/update_cart/<int:product_id>', methods=['POST'])
-def update_cart(product_id):
-    cart = session.get('cart', [])
-    quantity = int(request.form.get('quantity', 1))
-    for item in cart:
-        if item['id'] == product_id:
-            if quantity > 0:
-                item['quantity'] = quantity
-            else:
-                cart.remove(item)
-            break
-    session['cart'] = cart
-    flash("Cart updated!", "success")
-    return redirect(url_for('cart'))
-
-@app.route('/clear_cart')
-def clear_cart():
-    session.pop('cart', None)
-    flash("Cart cleared!", "success")
-    return redirect(url_for('cart'))
-
 @app.route('/delivery', methods=['GET', 'POST'])
 def delivery():
     if request.method == 'POST':
@@ -149,15 +114,24 @@ def delivery():
         address = request.form['address']
         phone = request.form['phone']
 
+        # Get cart items from the session
         cart_items = session.get('cart', [])
-        total_cost = sum(item['price'] * item['quantity'] for item in cart_items)
-        shipping_charge = 10.0
+
+        # Calculate the total cost of the cart
+        total_cost = sum(item['price'] for item in cart_items)
+
+        # Define shipping charges (you can change this logic)
+        shipping_charge = 10.0  # Static shipping charge, or calculate based on cart value or location
+
+        # Calculate the total order amount (items + shipping)
         total_order_amount = total_cost + shipping_charge
 
+        # Save delivery details to the database
         new_delivery = Delivery(name=name, address=address, phone=phone)
         db.session.add(new_delivery)
         db.session.commit()
 
+        # Create an order entry for the newly created delivery
         new_order = Order(
             delivery_id=new_delivery.id,
             cart_details=cart_items
@@ -166,16 +140,16 @@ def delivery():
         db.session.commit()
 
         flash(f"Order placed successfully! Total amount: ₹{total_order_amount}", "success")
-        session.pop('cart', None)
+        session.pop('cart', None)  # Clear the cart
         return redirect(url_for('home'))
 
+    # Calculate the total cost and shipping charges for displaying on the delivery page
     cart_items = session.get('cart', [])
-    total_cost = sum(item['price'] * item['quantity'] for item in cart_items)
-    shipping_charge = 10.0
+    total_cost = sum(item['price'] for item in cart_items)
+    shipping_charge = 10.0  # Shipping charge
     total_order_amount = total_cost + shipping_charge
 
-    return render_template('delivery.html', cart_items=cart_items, total_cost=total_cost,
-                           shipping_charge=shipping_charge, total_order_amount=total_order_amount)
+    return render_template('delivery.html', cart_items=cart_items, total_cost=total_cost, shipping_charge=shipping_charge, total_order_amount=total_order_amount)
 
 @app.route('/place_order', methods=['POST'])
 def place_order():
@@ -186,10 +160,12 @@ def place_order():
     name = request.form['name']
     address = request.form['address']
     phone = request.form['phone']
-
+    
+    # Convert cart items to a string for storage
     cart_items = session['cart']
     cart_items_str = ', '.join([f"{item['name']} (x{item.get('quantity', 1)})" for item in cart_items])
 
+    # Save the order to the database
     new_delivery = Delivery(name=name, address=address, phone=phone)
     db.session.add(new_delivery)
     db.session.commit()
@@ -201,13 +177,16 @@ def place_order():
     db.session.add(new_order)
     db.session.commit()
 
+    # Clear the cart after order placement
     session.pop('cart', None)
+
     flash("Order placed successfully!", "success")
     return redirect(url_for('index'))
 
 @app.route('/owner_orders')
 def owner_orders():
-    orders = Order.query.order_by(Order.created_at.desc()).all()
+    # Fetch all orders from the database, ordered by most recent
+    orders = Order.query.order_by(Order.created_at.desc()).all()  # Fetching orders in reverse order (most recent first)
     return render_template('owner_orders.html', orders=orders)
 
 @app.route('/order/<int:order_id>')
