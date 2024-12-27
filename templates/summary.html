@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Order Summary</title>
+</head>
+<body>
+    <h1>Order Summary</h1>
+    <h2>Cart Items</h2>
+    {% if cart %}
+        <ul>
+            {% for item in cart %}
+                <li>{{ item.name }} - ${{ item.price }}</li>
+            {% endfor %}
+        </ul>
+        <h3>Total: ${{ total_price }}</h3>
+    {% else %}
+        <p>No items in the cart.</p>
+    {% endif %}
+    
+    <h2>Delivery Details</h2>
+    {% if delivery_details %}
+        <p><strong>Name:</strong> {{ delivery_details.name }}</p>
+        <p><strong>Address:</strong> {{ delivery_details.address }}</p>
+        <p><strong>Phone:</strong> {{ delivery_details.phone }}</p>
+    {% else %}
+        <p>No delivery details provided.</p>
+    {% endif %}
+    
+    <a href="{{ url_for('index') }}">
+        <button>Go Back to Shop</button>
+    </a>
+</body>
+</html>

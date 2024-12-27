@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='signin.css') }}">
+</head>
+<body>
+    <form>
+        <fieldset>
+            <legend>Login</legend>
+            <label for="email">Enter the Email address:</label>
+            <input type="email" name="email" id="email" required>
+            <br><br>
+            <label for="password">Enter the Password:</label>
+            <input type="password" name="password" id="password" required>
+            <br><br>
+            <button type="submit">Login</button>
+            <br>
+            <p>Don't have an account? <a href="{{ url_for('register') }}">Register</a></p>
+        </fieldset>
+    </form>
+</body>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.querySelector('form'); // Select the form
+        const adminCredentials = {
+            email: 'admin@example.com', // Replace with your admin email
+            password: 'admin123' // Replace with your admin password
+        };
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault(); // Prevent form submission
+
+            const emailInput = document.querySelector('input[name="email"]').value;
+            const passwordInput = document.querySelector('input[name="password"]').value;
+
+            // Check credentials
+            if (emailInput === adminCredentials.email && passwordInput === adminCredentials.password) {
+                window.location.href = "{{ url_for('owner_orders') }}"; // Redirect to the Flask route
+            } else {
+                window.location.href = "{{ url_for('home') }}";
+            }
+        });
+    });
+</script>
+</html>

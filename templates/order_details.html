@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Details</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin-top: 50px;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #007bff;
+        }
+
+        .card {
+            background-color: #fff;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .card-body {
+            padding: 30px;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .table {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+            background-color: #fafafa;
+            border-radius: 8px;
+        }
+
+        .table th, .table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .table th {
+            background-color: #f1f1f1;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .table tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .table td {
+            font-size: 1rem;
+            color: #555;
+        }
+
+        .table td:last-child {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .back-button {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .back-button a {
+            text-decoration: none;
+            color: #007bff;
+            font-size: 1.2rem;
+        }
+
+        .back-button a:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+
+        .order-summary {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-summary p {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .order-summary .amount {
+            font-size: 1.3rem;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Order Details</h2>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Customer: {{ delivery.name }}</h5>
+                <p><strong>Address:</strong> {{ delivery.address }}</p>
+                <p><strong>Phone:</strong> {{ delivery.phone }}</p>
+                
+                <h5>Cart Details:</h5>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Item</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order.cart_details %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ item['name'] }}</td>
+                            <td>₹{{ item['price'] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Order Summary Section -->
+        <div class="order-summary">
+            <p><strong>Total Order Amount:</strong> <span class="amount">₹{{ total_order_amount }}</span></p>
+        </div>
+
+        <div class="back-button">
+            <a href="{{ url_for('owner_orders') }}" class="btn btn-secondary mt-3">Back to Orders</a>
+        </div>
+    </div>
+
+</body>
+</html>

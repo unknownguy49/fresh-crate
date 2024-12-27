@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>E-commerce - Vegetables</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Order Fresh Vegetables and Groceries</h1>
+    <div class="products">
+        {% for product in products %}
+            <div class="product">
+                <h3>{{ product.name }}</h3>
+                <p>Price: ₹{{ product.price }}</p>
+                <a href="{{ url_for('add_to_cart', product_id=product.id) }}">Add to Cart</a>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

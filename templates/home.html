@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+    <title>FreshCrate</title>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>FreshCrate</h1>
+            <p>Welcome to FreshCrate, your one-stop shop for all your grocery needs!</p>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#Grocery">Grocery</a></li>
+            <li><a href="#Fruits">Fruits</a></li>
+            <li><a href="#Vegetables">Vegetables</a></li>
+            <li><a href="#Dairy">Dairy</a></li>
+            <li><a href="#Beverages">Beverages</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <h2>Fresh Produce Delivered to Your Door</h2>
+        <p>Experience the convenience of shopping for fresh groceries from the comfort of your home. Our easy-to-use online platform allows you to browse and purchase a wide range of products with just a few clicks.</p>
+        <button onclick="alert('Redirecting to fresh deals')">Shop Now</button>
+    </section>
+
+    <section class="content">
+        <div class="category-card">
+            <img src="grocery.jpg" alt="Grocery">
+            <h3 id="Grocery">Grocery</h3>
+            <p>Find a wide range of groceries</p>
+            <button onclick="window.location.href='grocery.html';">Shop Now</button>
+        </div>
+
+        <div class="category-card">
+            <img src="fruits.jpg" alt="Fruits">
+            <h3 id="Fruits">Fruits</h3>
+            <p>Fresh and delicious fruits</p>
+            <button onclick="window.location.href='fruits.html'">Shop Now</button>
+        </div>
+
+        <div class="category-card">
+            <img src="vegetables.jpg" alt="Vegetables">
+            <h3 id="Vegetables">Vegetables</h3>
+            <p>Fresh picked Vegetables available at your doorstep</p>
+            <button onclick="window.location.href='{{ url_for('index') }}';">Shop Now</button>
+        </div>
+
+        <div class="category-card">
+            <img src="dairy.jpg" alt="Dairy">
+            <h3 id="Dairy">Dairy</h3>
+            <p>All Dairy products available</p>
+            <button onclick="window.location.href='dairy.html'">Shop Now</button>
+        </div>
+
+        <div class="category-card">
+            <img src="beverages.jpg" alt="Beverages">
+            <h3 id="Beverages">Beverages</h3>
+            <p>All Beverages available</p>
+            <button onclick="window.location.href='beverages.html'">Shop Now</button>
+        </div>
+    </section>
+
+    <section class="about">
+        <div class="about-us">
+            <h2>ABOUT US</h2>
+            <p>We are FreshCrate, your one-stop shop for all your grocery needs!</p>
+            <button onclick="window.location.href='about.html'">About Us</button>
+        </div>
+
+        <div class="contact-us">
+            <h2>CONTACT US</h2>
+            <p>To Contact Us</p>
+            <button onclick="redirectToGmail()">Contact Us</button>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2024 FreshCrate | <a href="#contact" style="color: white;">Contact Us</a></p>
+        <p>charanachanta2@gmail.com</p>
+    </footer>
+
+    <script>
+        function redirectToGmail() {
+            const recipientEmail = "charanachanta2@gmail.com"; // Replace with the recipient's email
+            const subject = "Inquiry";                   // Replace with your email subject
+            const body = "Hello, I would like to contact you regarding..."; // Replace with your email body
+
+            // Construct Gmail compose URL
+            const gmailComposeUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(recipientEmail)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+            // Redirect to Gmail compose URL
+            window.open(gmailComposeUrl, '_blank');
+        }
+    </script>
+</body>
+</html>

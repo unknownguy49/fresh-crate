@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart</title>
+    <!-- Bootstrap 5 CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        /* Custom advanced CSS */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin-top: 50px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #007bff;
+        }
+
+        .table {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .table th {
+            background-color: #28a745;
+            color: white;
+            text-align: center;
+        }
+
+        .table td {
+            text-align: center;
+            font-size: 16px;
+            vertical-align: middle;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #f9f9f9;
+        }
+
+        .btn {
+            border-radius: 8px;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+
+        .action-btns {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .empty-cart-message {
+            text-align: center;
+            font-size: 18px;
+            color: #dc3545;
+            margin-top: 20px;
+        }
+
+        .back-to-products-btn {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .back-to-products-btn:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+        /* Updated Go Back Button Style */
+        .go-back-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 30px;
+            font-size: 18px;
+            border-radius: 50px;
+            display: block;
+            margin: 20px auto 0;
+            text-align: center;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .go-back-btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-3px);
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Your Cart</h2>
+
+        {% if cart %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Price (₹)</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            <td>₹{{ item.price }}</td>
+                            <td>
+                                <a href="{{ url_for('remove_from_cart', product_id=item.id) }}" class="btn btn-danger btn-sm">
+                                    Remove
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="action-btns">
+                <a href="{{ url_for('delivery') }}" class="btn btn-primary">Proceed to Delivery</a>
+            </div>
+        {% else %}
+            <p class="empty-cart-message">Your cart is empty.</p>
+            <a href="{{ url_for('index') }}" class="back-to-products-btn">Go Back to Products</a>
+        {% endif %}
+
+        <!-- Updated Go Back to Product Items Button -->
+        <a href="{{ url_for('index') }}" class="go-back-btn">Go Back to Items</a>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

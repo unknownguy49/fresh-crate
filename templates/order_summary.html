@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Order Summary</title>
+</head>
+<body>
+    <h1>Order Summary</h1>
+    <h2>Delivery Details:</h2>
+    <p>Name: {{ delivery_details.name }}</p>
+    <p>Address: {{ delivery_details.address }}</p>
+    <p>Phone: {{ delivery_details.phone }}</p>
+    
+    <h2>Payment Method:</h2>
+    <p>{{ payment_method }}</p>
+
+    <h2>Cart Items:</h2>
+    <ul>
+        {% for item in cart_items %}
+            <li>{{ item.name }} - ${{ item.price }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

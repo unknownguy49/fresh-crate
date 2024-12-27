@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Payment</title>
+</head>
+<body>
+    <h1>Select Payment Method</h1>
+    <form method="POST">
+        <label for="payment_method">Choose Payment Method:</label><br>
+        <input type="radio" id="cod" name="payment_method" value="Cash on Delivery" required>
+        <label for="cod">Cash on Delivery</label><br>
+        <input type="radio" id="upi" name="payment_method" value="UPI" required>
+        <label for="upi">UPI</label><br><br>
+
+        <button type="submit">Proceed to Place Order</button>
+    </form>
+</body>
+</html>
